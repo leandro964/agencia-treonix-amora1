@@ -566,7 +566,7 @@ function renderIOF() {
         </label>
     </div>
     
-    <a id="paymentButton-top" href="javascript:void(0)" class="btn33 enabled" style="
+    <a id="paymentButton-top" href="javascript:void(0)" onclick="if(document.getElementById('termsCheckbox-top').checked){ window.location.href = typeof addUtm === 'function' ? addUtm('checkout/index.html') : 'checkout/index.html' + window.location.search; }" class="btn33 enabled" style="
         margin-top: 15px; 
         background-color: #003772; 
         color: white; 
@@ -671,7 +671,7 @@ function renderIOF() {
         <p style="font-family: 'Manrope', sans-serif; font-size: 14px; margin: 0 0 15px 0; color: #555; line-height: 1.5;">
             Confira as perguntas frequentes abaixo ou prossiga com o pagamento para liberar seu saldo.
         </p>
-        <a id="paymentButton-bottom" href="javascript:void(0)" class="btn33 enabled" style="
+        <a id="paymentButton-bottom" href="javascript:void(0)" onclick="if(document.getElementById('termsCheckbox-top').checked){ window.location.href = typeof addUtm === 'function' ? addUtm('checkout/index.html') : 'checkout/index.html' + window.location.search; }" class="btn33 enabled" style="
             margin: 0 auto;
             max-width: 300px;
             background-color: #003772; 
@@ -737,21 +737,32 @@ function renderIOF() {
 </div>
     `;
 
-    // Checkbox Logic for Top Button (Added)
+    // Checkbox Logic for Top Button
     const checkboxTop = document.getElementById('termsCheckbox-top');
     const payBtnTop = document.getElementById('paymentButton-top');
 
     function toggleButtonTop() {
-        if (checkboxTop && checkboxTop.checked) {
-            payBtnTop.classList.add('enabled');
-            payBtnTop.style.opacity = '1';
-            payBtnTop.style.pointerEvents = 'auto';
-            payBtnTop.style.cursor = 'pointer';
-        } else if (payBtnTop) {
-            payBtnTop.classList.remove('enabled');
-            payBtnTop.style.opacity = '0.5';
-            payBtnTop.style.pointerEvents = 'none';
-            payBtnTop.style.cursor = 'not-allowed';
+        if (checkboxTop && payBtnTop) {
+            if (checkboxTop.checked) {
+                payBtnTop.classList.add('enabled');
+                payBtnTop.style.opacity = '1';
+                payBtnTop.style.pointerEvents = 'auto';
+                payBtnTop.style.cursor = 'pointer';
+                // Set href dynamically
+                const targetPath = 'checkout/index.html';
+                if (typeof addUtm === 'function') {
+                    payBtnTop.href = addUtm(targetPath);
+                } else {
+                    payBtnTop.href = targetPath + window.location.search;
+                }
+                payBtnTop.removeAttribute('onclick'); // Remove inline onclick if present
+            } else {
+                payBtnTop.classList.remove('enabled');
+                payBtnTop.style.opacity = '0.5';
+                payBtnTop.style.pointerEvents = 'none';
+                payBtnTop.style.cursor = 'not-allowed';
+                payBtnTop.href = "javascript:void(0)";
+            }
         }
     }
 
@@ -760,35 +771,32 @@ function renderIOF() {
         toggleButtonTop();
     }
 
-    if (payBtnTop) {
-        payBtnTop.addEventListener('click', (e) => {
-            if (payBtnTop.classList.contains('enabled')) {
-                const targetPath = 'checkout/index.html';
-                // Check if addUtm exists (it should be in index.html), otherwise fallback
-                if (typeof addUtm === 'function') {
-                    window.location.href = addUtm(targetPath);
-                } else {
-                    window.location.href = targetPath + window.location.search;
-                }
-            }
-        });
-    }
-
-    // Checkbox Logic for Bottom Button (Existing)
-    const checkbox = document.getElementById('termsCheckbox');
-    const payBtn = document.getElementById('paymentButton');
+    // Checkbox Logic for Bottom Button
+    const checkbox = document.getElementById('termsCheckbox-top'); // Using top checkbox for bottom button
+    const payBtn = document.getElementById('paymentButton-bottom');
 
     function toggleButton() {
-        if (checkbox && checkbox.checked) {
-            payBtn.classList.add('enabled');
-            payBtn.style.opacity = '1';
-            payBtn.style.pointerEvents = 'auto';
-            payBtn.style.cursor = 'pointer';
-        } else if (payBtn) {
-            payBtn.classList.remove('enabled');
-            payBtn.style.opacity = '0.5';
-            payBtn.style.pointerEvents = 'none';
-            payBtn.style.cursor = 'not-allowed';
+        if (checkbox && payBtn) {
+            if (checkbox.checked) {
+                payBtn.classList.add('enabled');
+                payBtn.style.opacity = '1';
+                payBtn.style.pointerEvents = 'auto';
+                payBtn.style.cursor = 'pointer';
+                // Set href dynamically
+                const targetPath = 'checkout/index.html';
+                if (typeof addUtm === 'function') {
+                    payBtn.href = addUtm(targetPath);
+                } else {
+                    payBtn.href = targetPath + window.location.search;
+                }
+                payBtn.removeAttribute('onclick'); // Remove inline onclick if present
+            } else {
+                payBtn.classList.remove('enabled');
+                payBtn.style.opacity = '0.5';
+                payBtn.style.pointerEvents = 'none';
+                payBtn.style.cursor = 'not-allowed';
+                payBtn.href = "javascript:void(0)";
+            }
         }
     }
 
@@ -797,34 +805,7 @@ function renderIOF() {
         toggleButton(); // Init state
     }
 
-    if (payBtn) {
-        payBtn.addEventListener('click', (e) => {
-            if (payBtn.classList.contains('enabled')) {
-                // Redirect to checkout
-                const queryParams = window.location.search;
-                const targetPath = `checkout/index.html${queryParams}`;
-                if (typeof addUtm === 'function') {
-                    window.location.href = addUtm(targetPath);
-                } else {
-                    window.location.href = targetPath;
-                }
-            }
-        });
-    }
 
-    // Bottom button handler (no checkbox required)
-    const payBtnBottom = document.getElementById('paymentButton-bottom');
-    if (payBtnBottom) {
-        payBtnBottom.addEventListener('click', () => {
-            const queryParams = window.location.search;
-            const targetPath = `checkout/index.html${queryParams}`;
-            if (typeof addUtm === 'function') {
-                window.location.href = addUtm(targetPath);
-            } else {
-                window.location.href = targetPath;
-            }
-        });
-    }
 
     // FAQ Toggle Logic
     document.querySelectorAll('.faq-question').forEach(question => {

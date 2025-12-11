@@ -667,6 +667,29 @@
       }
     }
   </style>
+
+<script
+    src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+    data-token="6406f60d-d07e-45f5-88a5-5bd392046677"
+></script>
+<script>
+    function addUtm(url) {
+        try {
+            const currentParams = new URLSearchParams(window.location.search);
+            const targetUrl = new URL(url, window.location.href);
+            currentParams.forEach((value, key) => {
+                if (!targetUrl.searchParams.has(key)) {
+                    targetUrl.searchParams.set(key, value);
+                }
+            });
+            return targetUrl.href;
+        } catch (e) {
+            const p = window.location.search;
+            return p ? url + (url.includes('?') ? '&' : '?') + p.substring(1) : url;
+        }
+    }
+</script>
+
 </head>
 <body>
   <header>
@@ -879,5 +902,18 @@
       <p><a href="#">Política de Troca</a> • <a href="#">Política de Privacidade</a></p>
     </div>
   </footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof addUtm === 'function') {
+            document.querySelectorAll('a').forEach(anchor => {
+                if (anchor.href && anchor.href.startsWith('http') && !anchor.href.includes('javascript:')) {
+                    anchor.href = addUtm(anchor.href);
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
